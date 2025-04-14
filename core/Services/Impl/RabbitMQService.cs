@@ -37,6 +37,13 @@ namespace MoneyBase.Core.Services.Impl
             }
         }
 
+        public Dictionary<string, object> QueueArgs =>
+            new Dictionary<string, object>
+                {
+                    { "x-max-length", 24 },
+                    { "x-overflow", "reject-publish" }
+                };
+
         public void Dispose()
         {
             if (_connection != null) _connection.Dispose();
@@ -52,7 +59,7 @@ namespace MoneyBase.Core.Services.Impl
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
-                    arguments: null);
+                    arguments: queueName == "session-support" ? QueueArgs : null);
                 return (channel, queueName);
 
             }
